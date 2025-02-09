@@ -1,0 +1,44 @@
+{
+	"name": "jupyter",
+	"dockerComposeFile": ["../compose.yaml"],
+	"service": "jupyter",
+	"shutdownAction": "stopCompose",
+	"workspaceFolder": "/home/jovyan/workspace",
+	"remoteUser": "jovyan",
+"customizations": {
+	"vscode": {
+		"extensions": [
+			"moshfeu.compare-folders",
+			"twxs.cmake",
+			"mhutchie.git-graph",
+			"charliermarsh.ruff",
+			"ephoton.indent-switcher",
+			"oderwat.indent-rainbow",
+			"Gruntfuggly.todo-tree",
+			"svipas.prettier-plus",
+			"amazonwebservices.aws-toolkit-vscode",
+			"ms-toolsai.jupyter",
+            "ms-python.python",
+            "ms-python.debugpy",
+            "ms-python.vscode-pylance",
+            "ms-python.isort",
+            "ms-python.flake8",
+            "ms-python.black-formatter",
+            "ms-toolsai.jupyter",
+            "donjayamanne.python-environment-manager",
+            "mechatroner.rainbow-csv",
+            "bbenoist.Nix",
+            "inferrinizzard.prettier-sql-vscode",
+            "redhat.vscode-yaml",
+            "redhat.vscode-xml",
+            "DavidAnson.vscode-markdownlint",
+            "shd101wyy.markdown-preview-enhanced",
+            "njpwerner.autodocstring",
+            "esbenp.prettier-vscode",
+            "mikestead.dotenv",
+            "ms-vscode.makefile-tools"
+        
+		]
+	}
+}
+}

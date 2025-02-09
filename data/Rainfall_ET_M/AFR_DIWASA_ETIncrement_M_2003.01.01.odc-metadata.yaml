@@ -1,0 +1,36 @@
+---
+# Dataset
+$schema: https://schemas.opendatacube.org/dataset
+
+id: 28a6d0e5-b732-59d6-9cc3-5143266e25fd
+product:
+  name: iwmi_green_et_monthly
+  href: https://explorer.digitalearth.africa/product/iwmi_green_et_monthly
+
+crs: epsg:4326
+geometry:
+  type: Polygon
+  coordinates: [[[51.426719665527344, -34.822021484375], [51.426719665527344, 37.34130859375],
+      [-17.53215980529785, 37.34130859375], [-17.53215980529785, -34.822021484375],
+      [51.426719665527344, -34.822021484375]]]
+grids:
+  default:
+    shape: [7579, 7241]
+    transform: [0.009523391723632812, 0.0, -17.53215980529785, 0.0, -0.009521484375,
+      37.34130859375, 0.0, 0.0, 1.0]
+
+properties:
+  datetime: 2003-01-01 00:00:00Z
+  eo:platform: diwasa
+  odc:dataset_version: v1.0.0
+  odc:file_format: GeoTIFF
+  odc:processing_datetime: 2025-01-28 11:16:31.947658Z
+  odc:producer: www.iwmi.cgiar.org
+
+measurements:
+  data:
+    path: 
+      s3://iwmi-datasets/Water_accounting_plus/Africa/Incremental_ET_M/AFR_DIWASA_ETIncrement_M_2003.01.01.tif
+
+accessories: {}
+...

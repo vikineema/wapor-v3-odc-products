@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iwmi-odr-odc-product-py"
+version = "0.0.1"
+requires-python = ">= 3.9"
+dependencies= [
+    "aiobotocore[boto3,awscli]",
+    "click",
+    "eodatasets3",
+    "fsspec[full]",
+    "geopandas",
+    "odc-cloud[ASYNC]",
+    "pyyaml",
+    "rasterio",
+    
+]
+
+[project.optional-dependencies]
+lint = [
+    "black[jupyter]",
+    "flake8",
+    "isort>=5.0.0",
+    "pre-commit",
+]
+
+[project.scripts]
+create-stac-files = "iwmi_odr_odc_product_py.stac:create_stac_files"
+get-storage-parameters = "iwmi_odr_odc_product_py.storage_parameters:get_storage_parameters"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 100
+extend-exclude = '''
+src/iwmi_odr_odc_product_py/eo3assemble/easi_prepare_template\.py
+'''
