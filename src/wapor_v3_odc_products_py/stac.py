@@ -8,12 +8,10 @@ from eodatasets3.serialise import to_path
 from eodatasets3.stac import to_stac_item
 from odc.aws import s3_dump
 
-from iwmi_odr_odc_product_py import (
-    prepare_iwmi_blue_et_monthly_metadata,
-    prepare_iwmi_green_et_monthly_metadata,
-)
-from iwmi_odr_odc_product_py.common import get_logger
-from iwmi_odr_odc_product_py.io import find_geotiff_files, is_s3_path
+from wapor_v3_odc_products_py import prepare_wapor_soil_moisture_metadata
+from wapor_v3_odc_products_py.io import is_s3_path, is_url, is_gcsfs_path
+from wapor_v3_odc_products_py.logs import get_logger
+from wapor_v3_odc_products_py.utils import get_mapset_rasters
 
 logger = get_logger(Path(__file__).stem, level=logging.INFO)
 
@@ -28,7 +26,6 @@ logger = get_logger(Path(__file__).stem, level=logging.INFO)
     type=click.Path(),
     help="File path to the product definition yaml file",
 )
-@click.option("--geotiffs-dir", help="Directory containing the COG files")
 @click.option(
     "--stac-output-dir",
     type=click.Path(),
@@ -43,12 +40,11 @@ logger = get_logger(Path(__file__).stem, level=logging.INFO)
 def create_stac_files(
     product_name: str,
     product_yaml,
-    geotiffs_dir,
     stac_output_dir,
     metadata_output_dir,
 ):
 
-    valid_product_names = ["iwmi_blue_et_monthly", "iwmi_green_et_monthly"]
+    valid_product_names = ["wapor_soil_moisture"]
     if product_name not in valid_product_names:
         raise NotImplementedError(
             f"Stac file generation has not been implemented for {product_name}"
@@ -63,25 +59,25 @@ def create_stac_files(
         if not is_s3_path(product_yaml):
             product_yaml = Path(product_yaml).resolve()
 
-    if isinstance(geotiffs_dir, str):
-        if not is_s3_path(geotiffs_dir):
-            geotiffs_dir = Path(geotiffs_dir).resolve()
-
     if isinstance(stac_output_dir, str):
         if not is_s3_path(stac_output_dir):
             stac_output_dir = Path(stac_output_dir).resolve()
 
     logger.info(f"Generating stac files for the product {product_name}")
 
-    # Find all the geotiffs files in the directory
-    geotiffs = find_geotiff_files(str(geotiffs_dir))
-    print(f"Found {len(geotiffs)} geotiffs in {str(geotiffs_dir)}")
+    if product_name == "wapor_soil_moisture":
+        mapset_code = "L2-RSM-D"
+
+    geotiffs = get_mapset_rasters(mapset_code)
+    # Use a gsutil URI instead of the the public URL
+    geotiffs = [i.replace("https://storage.googleapis.com/", "gs://") for i in geotiffs]
 
     for idx, geotiff in enumerate(geotiffs):
         logger.info(f"Generating stac file for {geotiff} {idx+1}/{len(geotiffs)}")
 
-        # File system Path() to the dataset or S3 URL prefix (s3://bucket/key) to the dataset
-        if not is_s3_path(geotiff):
+        # File system Path() to the dataset
+        # or gsutil URI prefix  (gs://bucket/key) to the dataset.
+        if not is_s3_path(geotiff) and not is_gcsfs_path(geotiff):
             dataset_path = Path(geotiff)
         else:
             dataset_path = geotiff
@@ -97,12 +93,8 @@ def create_stac_files(
             metadata_output_path = None
             output_path = Path(os.path.join("/tmp", f"{tile_id}.odc-metadata.yaml"))
 
-        if product_name == "iwmi_blue_et_monthly":
-            dataset_doc = prepare_iwmi_blue_et_monthly_metadata.prepare_dataset(
-                dataset_path=dataset_path, product_yaml=product_yaml, output_path=output_path
-            )
-        elif product_name == "iwmi_green_et_monthly":
-            dataset_doc = prepare_iwmi_green_et_monthly_metadata.prepare_dataset(
+        if product_name == "wapor_soil_moisture":
+            dataset_doc = prepare_wapor_soil_moisture_metadata.prepare_dataset(
                 dataset_path=dataset_path, product_yaml=product_yaml, output_path=output_path
             )
 

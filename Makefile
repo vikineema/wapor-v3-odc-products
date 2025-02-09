@@ -19,39 +19,19 @@ init: ## Prepare the database
 	docker compose exec -T jupyter datacube -v system init
 
 add-products:
-	docker compose exec -T jupyter datacube product add ./workspace/products/iwmi_blue_et_monthly.odc-product.yaml
-	docker compose exec -T jupyter datacube product add ./workspace/products/iwmi_green_et_monthly.odc-product.yaml
+	docker compose exec -T jupyter datacube product add ./workspace/products/wapor_soil_moisture.odc-product.yaml
 
-get-storage-parameters-iwmi_blue_et_monthly:
+get-storage-parameters-wapor_soil_moisture:
 	get-storage-parameters \
-	--product-name="iwmi_blue_et_monthly" \
-	--geotiffs-dir=s3://iwmi-datasets/Water_accounting_plus/Africa/Incremental_ET_M/ \
-	--output-dir="data/Incremental_ET_M/" 
+	--product-name="wapor_soil_moisture" \
+	--output-dir="data/wapor_soil_moisture/" 
 
-get-storage-parameters-iwmi_green_et_monthly:
-	get-storage-parameters \
-	--product-name="iwmi_green_et_monthly" \
-	--geotiffs-dir=s3://iwmi-datasets/Water_accounting_plus/Africa/Rainfall_ET_M/ \
-	--output-dir="data/Rainfall_ET_M/" 
-
-create-stac-iwmi_blue_et_monthly:
+create-stac-wapor_soil_moisture:
 	create-stac-files \
-	 --product-name="iwmi_blue_et_monthly" \
-	 --product-yaml="products/iwmi_blue_et_monthly.odc-product.yaml" \
-	 --metadata-output-dir="data/Incremental_ET_M/" \
-	 --stac-output-dir="data/Incremental_ET_M/" \
-	 --geotiffs-dir=s3://iwmi-datasets/Water_accounting_plus/Africa/Incremental_ET_M/
-
-create-stac-iwmi_green_et_monthly:
-	create-stac-files \
-	 --product-name="iwmi_green_et_monthly" \
-	 --product-yaml="products/iwmi_green_et_monthly.odc-product.yaml" \
-	 --metadata-output-dir="data/Rainfall_ET_M/" \
-	 --stac-output-dir="data/Rainfall_ET_M/" \
-	 --geotiffs-dir=s3://iwmi-datasets/Water_accounting_plus/Africa/Incremental_ET_M/
-
-download-iwmi-odr-data:
-	aws s3 cp --recursive  --no-sign-request s3://iwmi-datasets/Water_accounting_plus/Africa/ data/
+	 --product-name="wapor_soil_moisture" \
+	 --product-yaml="products/wapor_soil_moisture.odc-product.yaml" \
+	 --metadata-output-dir="data/wapor_soil_moisture/" \
+	 --stac-output-dir="data/wapor_soil_moisture/" 
 
 up: ## Bring up your Docker environment
 	docker compose up -d postgres

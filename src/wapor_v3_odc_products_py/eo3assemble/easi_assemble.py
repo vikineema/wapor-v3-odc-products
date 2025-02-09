@@ -108,7 +108,7 @@ class EasiPrepare(Eo3Interface):
             if loc.scheme in ("file",):
                 scheme = "file"
                 new_path = Path("/".join(["", loc.netloc, loc.path])).resolve()
-            elif loc.scheme in ("s3",):
+            elif loc.scheme in ("s3", "gs", "gcs"):
                 scheme = loc.scheme
                 new_path = some_path
                 bucket = loc.hostname
@@ -149,7 +149,7 @@ class EasiPrepare(Eo3Interface):
                     meta = self._dataset_path / OUTPUT_NAME
                 else:
                     meta = self._dataset_path.parent / OUTPUT_NAME
-        if self._dataset_scheme in ("s3",):
+        if self._dataset_scheme in ("s3", "gs", "gcs"):
             if output_path:
                 # Make sure its local
                 # If a directory then + OUTPUT_NAME

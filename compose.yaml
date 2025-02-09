@@ -18,6 +18,7 @@ services:
       - DB_USERNAME=opendatacube
       - DB_PORT=5432
       - AWS_NO_SIGN_REQUEST=true
+      - GS_NO_SIGN_REQUEST=yes
       - AWS_S3_ENDPOINT=s3.af-south-1.amazonaws.com
       - CIABPASSWORD=${CIABPASSWORD:-secretpassword}
     links:

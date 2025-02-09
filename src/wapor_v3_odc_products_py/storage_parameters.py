@@ -4,15 +4,12 @@ import os
 from pathlib import Path
 
 import click
-import rasterio
+import rioxarray
 from tqdm import tqdm
 
-from iwmi_odr_odc_product_py.common import get_logger
-from iwmi_odr_odc_product_py.io import (
-    check_directory_exists,
-    find_geotiff_files,
-    get_filesystem,
-)
+from wapor_v3_odc_products_py.io import check_directory_exists, get_filesystem
+from wapor_v3_odc_products_py.logs import get_logger
+from wapor_v3_odc_products_py.utils import get_mapset_rasters
 
 logger = get_logger(Path(__file__).stem, level=logging.INFO)
 
@@ -23,9 +20,6 @@ logger = get_logger(Path(__file__).stem, level=logging.INFO)
     help="Name of the product to get the storage parameters for",
 )
 @click.option(
-    "--geotiffs-dir", help="Directory containing the COG files to check the CRS and resolution"
-)
-@click.option(
     "--output-dir",
     type=click.Path(),
     default=None,
@@ -33,18 +27,34 @@ logger = get_logger(Path(__file__).stem, level=logging.INFO)
 )
 def get_storage_parameters(
     product_name: str,
-    geotiffs_dir: str,
     output_dir: str,
 ):
-    geotiffs_file_paths = find_geotiff_files(directory_path=geotiffs_dir)
+    if product_name == "wapor_soil_moisture":
+        mapset_code = "L2-RSM-D"
+
+    geotiffs_file_paths = get_mapset_rasters(mapset_code)
 
     storage_parameters_list = []
 
     for file_path in tqdm(iterable=geotiffs_file_paths, total=len(geotiffs_file_paths)):
-        with rasterio.open(file_path) as src:
-            crs = src.crs  # Coordinate Reference System
-            res_x, res_y = src.res  # Pixel resolution (x, y)
-        item = {"crs": f"EPSG:{crs.to_epsg()}", "res_x": res_x, "res_y": res_y}
+        da = rioxarray.open_rasterio(file_path)
+        crs = da.rio.crs.to_epsg()  # Coordinate Reference System
+        res_x, res_y = da.rio.resolution()  # Pixel resolution (x, y)
+        dtype = str(da.dtype)  # Data type of the first band
+        nodata = da.rio.nodata
+        attrs = da.attrs
+        add_offset = attrs.get("add_offset", None)
+        scale_factor = attrs.get("scale_factor", None)
+
+        item = {
+            "crs": f"EPSG:{crs}",
+            "res_x": res_x,
+            "res_y": res_y,
+            "add_offset": add_offset,
+            "scale_factor": scale_factor,
+            "dtype": dtype,
+            "nodata": nodata,
+        }
         storage_parameters_list.append(item)
 
     # Convert dicts to JSON strings to create a unique set

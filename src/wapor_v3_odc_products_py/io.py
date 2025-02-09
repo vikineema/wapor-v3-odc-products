@@ -1,18 +1,31 @@
 import logging
 import os
 import re
+from pathlib import Path
 
 import fsspec
 import geopandas as gpd
 import s3fs
+import gcsfs
+
 from fsspec.implementations.local import LocalFileSystem
 from s3fs.core import S3FileSystem
 
-_log = logging.getLogger(__name__)
+from wapor_v3_odc_products_py.logs import get_logger
+
+logger = get_logger(Path(__file__).stem, level=logging.INFO)
 
 
 def is_s3_path(path: str) -> bool:
     return path.startswith("s3://")
+
+
+def is_gcsfs_path(path: str) -> bool:
+    return path.startswith("gcs://") or path.startswith("gs://")
+
+
+def is_url(path: str) -> bool:
+    return path.startswith("http://") or path.startswith("https://")
 
 
 def get_filesystem(
@@ -21,6 +34,11 @@ def get_filesystem(
 ) -> S3FileSystem | LocalFileSystem:
     if is_s3_path(path=path):
         fs = s3fs.S3FileSystem(anon=anon, s3_additional_kwargs={"ACL": "bucket-owner-full-control"})
+    elif is_gcsfs_path(path=path):
+        if anon:
+            fs = gcsfs.GCSFileSystem(token="anon")
+        else:
+            fs = gcsfs.GCSFileSystem()
     else:
         fs = fsspec.filesystem("file")
     return fs
@@ -87,7 +105,8 @@ def find_geotiff_files(directory_path: str, file_name_pattern: str = ".*") -> li
 
     if is_s3_path(path=directory_path):
         geotiff_file_paths = [f"s3://{file}" for file in geotiff_file_paths]
-
+    if is_gcsfs_path(path=directory_path):
+        geotiff_file_paths = [f"gs://{file}" for file in geotiff_file_paths]
     return geotiff_file_paths
 
 
@@ -110,5 +129,6 @@ def find_parquet_files(directory_path: str, file_name_pattern: str = ".*") -> li
 
     if is_s3_path(path=directory_path):
         parquet_file_paths = [f"s3://{file}" for file in parquet_file_paths]
-
+    if is_gcsfs_path(path=directory_path):
+        parquet_file_paths = [f"gs://{file}" for file in parquet_file_paths]
     return parquet_file_paths
