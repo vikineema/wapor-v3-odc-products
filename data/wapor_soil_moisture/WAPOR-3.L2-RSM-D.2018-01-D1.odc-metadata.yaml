@@ -1,0 +1,36 @@
+---
+# Dataset
+$schema: https://schemas.opendatacube.org/dataset
+
+id: 63d9a0a7-0024-508c-876d-baa2c91d2c89
+product:
+  name: wapor_soil_moisture
+  href: https://explorer.digitalearth.africa/product/wapor_soil_moisture
+
+crs: epsg:4326
+geometry:
+  type: Polygon
+  coordinates: [[[180.0, -60.0], [180.0, 60.0], [-180.0, 60.0], [-180.0, -60.0], [
+        180.0, -60.0]]]
+grids:
+  default:
+    shape: [122880, 368640]
+    transform: [0.0009765625, 0.0, -180.0, 0.0, -0.0009765625, 60.0, 0.0, 0.0, 1.0]
+
+properties:
+  datetime: 2018-01-10 00:00:00Z
+  dtr:end_datetime: 2018-01-10 23:59:59Z
+  dtr:start_datetime: 2018-01-01 00:00:00Z
+  eo:platform: waporv3
+  odc:dataset_version: v3.0
+  odc:file_format: GeoTIFF
+  odc:processing_datetime: 2024-09-26 10:48:28Z
+  odc:producer: www.fao.org
+
+measurements:
+  relative_soil_moisture:
+    path: 
+      gs://fao-gismgr-wapor-3-data/DATA/WAPOR-3/MAPSET/L2-RSM-D/WAPOR-3.L2-RSM-D.2018-01-D1.tif
+
+accessories: {}
+...

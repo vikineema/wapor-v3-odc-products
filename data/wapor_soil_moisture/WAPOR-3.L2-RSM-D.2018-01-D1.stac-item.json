@@ -1,0 +1,107 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/eo/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.1.0/schema.json"
+  ],
+  "id": "63d9a0a7-0024-508c-876d-baa2c91d2c89",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          180.0,
+          -60.0
+        ],
+        [
+          180.0,
+          60.0
+        ],
+        [
+          -180.0,
+          60.0
+        ],
+        [
+          -180.0,
+          -60.0
+        ],
+        [
+          180.0,
+          -60.0
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -180.0,
+    -60.0,
+    180.0,
+    60.0
+  ],
+  "properties": {
+    "platform": "waporv3",
+    "odc:producer": "www.fao.org",
+    "odc:file_format": "GeoTIFF",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2018-01-10T23:59:59Z",
+    "created": "2024-09-26T10:48:28Z",
+    "odc:dataset_version": "v3.0",
+    "proj:epsg": 4326,
+    "proj:shape": [
+      122880,
+      368640
+    ],
+    "proj:transform": [
+      0.0009765625,
+      0.0,
+      -180.0,
+      0.0,
+      -0.0009765625,
+      60.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "datetime": "2018-01-10T00:00:00Z"
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "/home/jovyan/dev/wapor-v3-odc-products/data/wapor_soil_moisture/WAPOR-3.L2-RSM-D.2018-01-D1.stac-item.json",
+      "type": "application/json"
+    }
+  ],
+  "assets": {
+    "relative_soil_moisture": {
+      "href": "gs://fao-gismgr-wapor-3-data/DATA/WAPOR-3/MAPSET/L2-RSM-D/WAPOR-3.L2-RSM-D.2018-01-D1.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "relative_soil_moisture",
+      "eo:bands": [
+        {
+          "name": "relative_soil_moisture"
+        }
+      ],
+      "proj:epsg": 4326,
+      "proj:shape": [
+        122880,
+        368640
+      ],
+      "proj:transform": [
+        0.0009765625,
+        0.0,
+        -180.0,
+        0.0,
+        -0.0009765625,
+        60.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "collection": "wapor_soil_moisture"
+}
