@@ -35,9 +35,9 @@ create-stac-wapor_soil_moisture:
 
 up: ## Bring up your Docker environment
 	docker compose up -d postgres
-	docker composdae run checkdb
+	docker compose run checkdb
 	docker compose up -d jupyter
-	make fix-file-permissions
+	# make fix-file-permissions
 	docker compose up -d explorer
 
 down:
@@ -45,3 +45,6 @@ down:
 
 logs:
 	docker compose logs
+
+shell:
+	docker compose exec jupyter bash -c "cd /home/jovyan/workspace && exec bash"
