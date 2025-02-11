@@ -39,6 +39,7 @@ up: ## Bring up your Docker environment
 	docker compose up -d jupyter
 	# make fix-file-permissions
 	docker compose up -d explorer
+	make init
 
 down:
 	docker compose down --remove-orphans
