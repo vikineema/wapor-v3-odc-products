@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory containing metadata files
-METADATA_DIR="./data/Incremental_ET_M"
+METADATA_DIR="./data/wapor_soil_moisture"
 
 if [[ ! -d "$METADATA_DIR" ]]; then
     echo "Directory $METADATA_DIR does not exist. Exiting."
